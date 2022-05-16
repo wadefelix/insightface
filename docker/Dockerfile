@@ -22,8 +22,13 @@ onnxruntime' > /tmp/requirements && \
 
 RUN pip3 install --no-cache-dir -i https://pypi.tuna.tsinghua.edu.cn/simple insightface
 
+
+ARG DEFAULT_MP_NAME=buffalo_l
+ARG DEFAULT_MP_NAME_DOWNLOAD_URL=http://insightface.cn-sh2.ufileos.com/models/${DEFAULT_MP_NAME}.zip
+# RUN echo "DEFAULT_MP_NAME = '${DEFAULT_MP_NAME}'" > /usr/local/lib/python3.9/site-packages/insightface/utils/constant.py
+RUN sed -i "s/DEFAULT_MP_NAME\s*=.*/DEFAULT_MP_NAME = '${DEFAULT_MP_NAME}'/" /usr/local/lib/python3.9/site-packages/insightface/utils/constant.py
 RUN mkdir -p /root/.insightface/models && \
-    curl -L -o /tmp/buffalo_l.zip http://insightface.cn-sh2.ufileos.com/models/buffalo_l.zip && \
-    unzip /tmp/buffalo_l.zip -d /root/.insightface/models && \
-    rm /tmp/buffalo_l.zip
+    curl -L -o /tmp/${DEFAULT_MP_NAME}.zip ${DEFAULT_MP_NAME_DOWNLOAD_URL} && \
+    unzip /tmp/${DEFAULT_MP_NAME}.zip -d /root/.insightface/models/${DEFAULT_MP_NAME} && \
+    rm /tmp/${DEFAULT_MP_NAME}.zip
 
